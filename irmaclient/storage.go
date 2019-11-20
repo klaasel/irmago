@@ -177,6 +177,20 @@ func (s *storage) LoadSignature(attrs *irma.AttributeList) (*gabi.CLSignature, *
 	if err := s.load(sig, sigpath); err != nil {
 		return nil, nil, err
 	}
+
+	if sig.Witness != nil {
+		pk, err := s.Configuration.RevocationStorage.Keys.PublicKey(
+			attrs.CredentialType().IssuerIdentifier(),
+			sig.Witness.Record.PublicKeyIndex,
+		)
+		if err != nil {
+			return nil, nil, err
+		}
+		if err = sig.Witness.Verify(pk); err != nil {
+			return nil, nil, err
+		}
+	}
+
 	return sig.CLSignature, sig.Witness, nil
 }
 
