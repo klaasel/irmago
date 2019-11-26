@@ -56,8 +56,8 @@ An [irma_keyshare_server](https://github.com/credentials/irma_keyshare_server) s
 <!-- vim: set ts=4 sw=4: -->
 
 ### QUIC research Open University September 2019
-In our research we extended at a certain point in the development of the irmago library the source coe with logging. See the commit message for details.
+In our research we extended at a certain point in the development of the irmago library the source code with logging. See the commit message for details.
 N.B. we had some difficulties with dep en go mod. If the source code does not compile, consider doing the following:
-* Manually git clone rifflock/lfshook (master)
+* Manually git clone rifflock/lfshook (master) to your Go folder
 * Manually git clone marten-seemann/qtls v0.4.0 and change all the "crypto/ed25519" to "golang.org/x/crypto/ed25519"
-* Manually clone https://github.com/sietseringers/viper (branch add-file-key-replace) and https://github.com/sietseringers/pflag (branch headers-in-flag-usage) into the corresponding vendor folders
+* Manually clone https://github.com/sietseringers/viper (branch add-file-key-replace) and https://github.com/sietseringers/pflag (branch headers-in-flag-usage) into the corresponding vendor folders in irmago
