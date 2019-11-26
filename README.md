@@ -1,5 +1,7 @@
 # irmago &nbsp; [![GoDoc](https://godoc.org/github.com/privacybydesign/irmago?status.svg)](https://godoc.org/github.com/privacybydesign/irmago) [![Go Report Card](https://goreportcard.com/badge/github.com/privacybydesign/irmago)](https://goreportcard.com/report/github.com/privacybydesign/irmago)
 
+(This is a fork of the repository of PBDF for the research of the Open University regarding implementing QUIC in the IRMA platform. See at the bottom for more instructions)
+
 `irmago` is an IRMA implementation in Go. It contains multiple libraries and applications:
 
 * The commandline tool [`irma`](https://irma.app/docs/irma-cli/), which contains an [IRMA server](https://irma.app/docs/irma-server/); subcommands for manipulating [IRMA schemes](https://irma.app/docs/schemes/), generating IRMA issuer public/private keypairs, performing test IRMA sessions on the command line; and more.
@@ -52,3 +54,10 @@ An [irma_keyshare_server](https://github.com/credentials/irma_keyshare_server) s
 - Make sure `check_user_enabled` is set to false in the Keyshare server configuration. Other options are already setup correctly in the example configuration.
 
 <!-- vim: set ts=4 sw=4: -->
+
+### QUIC research Open University September 2019
+In our research we extended at a certain point in the development of the irmago library the source coe with logging. See the commit message for details.
+N.B. we had some difficulties with dep en go mod. If the source code does not compile, consider doing the following:
+* Manually git clone rifflock/lfshook (master)
+* Manually git clone marten-seemann/qtls v0.4.0 and change all the "crypto/ed25519" to "golang.org/x/crypto/ed25519"
+* Manually clone https://github.com/sietseringers/viper (branch add-file-key-replace) and https://github.com/sietseringers/pflag (branch headers-in-flag-usage) into the corresponding vendor folders
