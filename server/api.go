@@ -16,13 +16,15 @@ import (
 
 	"github.com/go-errors/errors"
 	"github.com/privacybydesign/gabi"
-	"github.com/privacybydesign/irmago"
+	irma "github.com/privacybydesign/irmago"
 	"github.com/privacybydesign/irmago/internal/fs"
 	"github.com/sirupsen/logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 
 var Logger *logrus.Logger = logrus.StandardLogger()
+
+const LOG_FILE = "tmp/logrus.txt"
 
 // Configuration contains configuration for the irmaserver library and irmad.
 type Configuration struct {
@@ -444,11 +446,14 @@ func NewLogger(verbosity int, quiet bool, json bool) *logrus.Logger {
 
 	logger.Level = Verbosity(verbosity)
 	if json {
-		logger.SetFormatter(&logrus.JSONFormatter{})
+		logger.SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: "2006-01-02T15:04:05.999Z",
+		})
 	} else {
 		logger.SetFormatter(&prefixed.TextFormatter{
-			FullTimestamp: true,
-			DisableColors: runtime.GOOS == "windows",
+			FullTimestamp:   true,
+			TimestampFormat: "2006-01-02T15:04:05.999Z",
+			DisableColors:   runtime.GOOS == "windows",
 		})
 	}
 

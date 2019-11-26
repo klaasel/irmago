@@ -4,13 +4,14 @@ import (
 	"crypto/rsa"
 	"crypto/tls"
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-errors/errors"
-	"github.com/privacybydesign/irmago"
+	irma "github.com/privacybydesign/irmago"
 	"github.com/privacybydesign/irmago/internal/fs"
 	"github.com/privacybydesign/irmago/server"
 )
@@ -345,7 +346,16 @@ func (conf *Configuration) readTlsConf(cert, certfile, key, keyfile string) (*tl
 	if err != nil {
 		return nil, err
 	}
+
+	// insert the KeyLogWriter here
+	w, err1 := os.OpenFile("irma-tls-secrets.txt", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	if err1 != nil {
+		fmt.Println(err1)
+		return nil, err
+	}
+
 	return &tls.Config{
+		KeyLogWriter:             w,
 		Certificates:             []tls.Certificate{cer},
 		MinVersion:               tls.VersionTLS12,
 		CurvePreferences:         []tls.CurveID{tls.CurveP521, tls.CurveP384, tls.CurveP256},

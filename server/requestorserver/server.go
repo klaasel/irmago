@@ -16,12 +16,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/lucas-clemente/quic-go/http3"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-errors/errors"
-	"github.com/privacybydesign/irmago"
+	irma "github.com/privacybydesign/irmago"
 	"github.com/privacybydesign/irmago/server"
 	"github.com/privacybydesign/irmago/server/irmaserver"
 	"github.com/sirupsen/logrus"
@@ -116,11 +118,13 @@ func (s *Server) startServer(handler http.Handler, name, addr string, port int, 
 
 	if tlsConf != nil {
 		// Disable HTTP/2 (see package documentation of http): it breaks server side events :(
-		serv.TLSNextProto = make(map[string]func(*http.Server, *tls.Conn, http.Handler))
+		// serv.TLSNextProto = make(map[string]func(*http.Server, *tls.Conn, http.Handler))
 		s.conf.Logger.Info(name, " TLS enabled")
 		return filterStopError(serv.ListenAndServeTLS("", ""))
 	} else {
-		return filterStopError(serv.ListenAndServe())
+		s.conf.Logger.Info(name, " not TLS, but attempting QUIC at ", serv.Addr)
+		err1 := http3.ListenAndServe(serv.Addr, "domain-crt.txt", "domain-key.txt", serv.Handler)
+		return filterStopError(err1)
 	}
 }
 
